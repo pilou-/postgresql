@@ -1,0 +1,19 @@
+- name: PostgreSQL | Ensure PostgreSQL is running
+  service:
+    name: "{{ postgresql_service_name }}"
+    state: started
+
+- name: PostgreSQL | Fetch PostgreSQL service status | Debian and systemd
+  systemd:
+    name: "{{ postgresql_service_name }}@{{ postgresql_version }}-{{ postgresql_cluster_name }}"
+    state: started
+    register: postgresql_systemd_service
+  when:
+    - ansible_os_family == 'Debian'
+    - ansible_service_mgr == 'systemd'
+
+- name: PostgreSQL | Ensure PostgreSQL is running | Debian and systemd
+  assert:
+    that:
+      - postgresql_systemd_service.status['SubState'] == 'running'
+  when: postgresql_systemd_service is not skipped

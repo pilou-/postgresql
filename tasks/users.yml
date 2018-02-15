@@ -1,9 +1,6 @@
 # file: postgresql/tasks/users.yml
 
-- name: PostgreSQL | Ensure PostgreSQL is running
-  service:
-    name: "{{ postgresql_service_name }}"
-    state: started
+- include: service_started.yml
 
 - name: PostgreSQL | Make sure the PostgreSQL users are present
   postgresql_user:
